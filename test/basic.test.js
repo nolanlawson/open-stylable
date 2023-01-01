@@ -1,11 +1,12 @@
-import { expect } from '@esm-bundle/chai';
+/* global it, before, beforeEach, afterEach, getComputedStyle, customElements, HTMLElement, CSSStyleSheet */
+import { expect } from '@esm-bundle/chai'
 import { OpenStylable } from '../src/index.js'
 
 let element
 
-before(() =>{
+before(() => {
   customElements.define('x-basic', class extends OpenStylable(HTMLElement) {
-    constructor() {
+    constructor () {
       super()
       this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
     }
@@ -17,7 +18,7 @@ beforeEach(() => {
   document.body.appendChild(element)
 })
 
-afterEach(() =>{
+afterEach(() => {
   for (const node of [...document.body.children]) {
     if (node.tagName !== 'SCRIPT') { // added by test runner
       node.remove()
@@ -29,13 +30,13 @@ afterEach(() =>{
   document.adoptedStyleSheets = []
 })
 
-function createConstructableStyleSheet(content) {
+function createConstructableStyleSheet (content) {
   const sheet = new CSSStyleSheet()
   sheet.replaceSync(content)
   return sheet
 }
 
-function addStyleTag(content) {
+function addStyleTag (content) {
   const style = document.createElement('style')
   style.textContent = content
   document.head.appendChild(style)
@@ -96,7 +97,6 @@ it.skip('works with insertRule', async () => {
   const sheets = [...document.styleSheets]
   sheets.at(-1).insertRule('div { color: red } ')
   await Promise.resolve()
-  debugger
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
 })
 

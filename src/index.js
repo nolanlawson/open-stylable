@@ -1,9 +1,10 @@
+/* global MutationObserver */
 
 let globalStyles
 const openStylableElements = new Set()
 const elementsToAnchors = new WeakMap()
 
-function getAnchors(element) {
+function getAnchors (element) {
   let anchors = elementsToAnchors.get(element)
   if (!anchors) {
     anchors = [document.createTextNode(''), document.createTextNode('')]
@@ -13,22 +14,22 @@ function getAnchors(element) {
   return anchors
 }
 
-function clearStyles(element) {
-  let [startAnchor, endAnchor] = getAnchors(element)
+function clearStyles (element) {
+  const [startAnchor, endAnchor] = getAnchors(element)
   let nextSibling
   while ((nextSibling = startAnchor.nextSibling) !== endAnchor) {
     nextSibling.remove()
   }
 }
 
-function setStyles(element) {
-  let [, endAnchor] = getAnchors(element)
+function setStyles (element) {
+  const [, endAnchor] = getAnchors(element)
   for (const node of [...globalStyles.content.children]) {
     element.shadowRoot.insertBefore(node, endAnchor)
   }
 }
 
-function updateGlobalStyles() {
+function updateGlobalStyles () {
   globalStyles = document.createElement('template')
   for (const node of [...document.head.querySelectorAll('style,link[rel="stylesheet"]')]) {
     globalStyles.content.appendChild(node.cloneNode(true))
@@ -53,7 +54,7 @@ updateGlobalStyles()
 
 export const OpenStylable = superclass => {
   return class extends superclass {
-    connectedCallback() {
+    connectedCallback () {
       try {
         if (super.connectedCallback) {
           super.connectedCallback()
@@ -64,12 +65,12 @@ export const OpenStylable = superclass => {
       }
     }
 
-    disconnectedCallback() {
+    disconnectedCallback () {
       try {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback()
-      }
-        } finally {
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback()
+        }
+      } finally {
         openStylableElements.delete(this)
         clearStyles(this)
       }

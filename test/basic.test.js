@@ -89,6 +89,50 @@ it('works if style is modified', async () => {
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
 })
 
+it('works if shadow root is attached in connected callback - framework style', async () => {
+  // mimic how lit calls attachShadow in connectedCallback
+  class FrameworkElement extends HTMLElement {
+    connectedCallback () {
+      this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
+    }
+  }
+
+  customElements.define('x-framework', class extends OpenStylable(FrameworkElement) {})
+  const element = document.createElement('x-framework')
+  document.body.appendChild(element)
+  addStyleTag('div { color: blue }')
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
+})
+
+it('works if shadow root is attached in connected callback - standalone style', async () => {
+  customElements.define('x-connected', class extends OpenStylable(HTMLElement) {
+    connectedCallback () {
+      super.connectedCallback()
+      this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
+    }
+  })
+  const element = document.createElement('x-connected')
+  document.body.appendChild(element)
+  addStyleTag('div { color: blue }')
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
+})
+
+it('styles removed when disconnected', async () => {
+  addStyleTag('div { color: red }')
+  await Promise.resolve()
+  expect(element.shadowRoot.querySelectorAll('*').length).to.equal(2) // has a <style>
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+  document.body.removeChild(element)
+  await Promise.resolve()
+  expect(element.shadowRoot.querySelectorAll('*').length).to.equal(1) // no <style>
+  document.body.appendChild(element)
+  await Promise.resolve()
+  expect(element.shadowRoot.querySelectorAll('*').length).to.equal(2) // has a <style> again
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+})
+
 // TODO: implement this
 it.skip('works with insertRule', async () => {
   addStyleTag('div { color: blue }')

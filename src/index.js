@@ -57,7 +57,11 @@ export const OpenStylable = superclass => {
         }
       } finally {
         openStylableElements.add(this)
-        setStyles(this)
+        if (this.shadowRoot) {
+          setStyles(this)
+        } else { // if shadowRoot doesn't exist yet, wait to see if it gets added in connectedCallback
+          Promise.resolve().then(() => setStyles(this))
+        }
       }
     }
 

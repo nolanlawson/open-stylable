@@ -4,6 +4,7 @@ let globalStyles
 const openStylableElements = new Set()
 const elementsToAnchors = new WeakMap()
 
+// Use empty text nodes to know the start and end anchors of where we should insert cloned styles
 function getAnchors (element) {
   let anchors = elementsToAnchors.get(element)
   if (!anchors) {

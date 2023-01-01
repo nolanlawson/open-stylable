@@ -24,16 +24,13 @@ function clearStyles (element) {
 
 function setStyles (element) {
   const [, endAnchor] = getAnchors(element)
-  for (const node of [...globalStyles.content.children]) {
-    element.shadowRoot.insertBefore(node, endAnchor)
+  for (const node of globalStyles) {
+    element.shadowRoot.insertBefore(node.cloneNode(true), endAnchor)
   }
 }
 
 function updateGlobalStyles () {
-  globalStyles = document.createElement('template')
-  for (const node of [...document.head.querySelectorAll('style,link[rel="stylesheet"]')]) {
-    globalStyles.content.appendChild(node.cloneNode(true))
-  }
+  globalStyles = document.head.querySelectorAll('style,link[rel="stylesheet"]')
 }
 
 const observer = new MutationObserver(() => {

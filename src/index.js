@@ -21,17 +21,16 @@ function clearStyles(element) {
   }
 }
 
-
 function setStyles(element) {
   let anchors = getAnchors(element)
-  for (const node of [...globalStyles.content.children].reverse()) {
+  for (const node of [...globalStyles.content.children]) {
     element.shadowRoot.insertBefore(node, anchors[1])
   }
 }
 
 function updateGlobalStyles() {
   globalStyles = document.createElement('template')
-  for (const node of document.head.querySelectorAll('style,link[rel="stylesheet"]')) {
+  for (const node of [...document.head.querySelectorAll('style,link[rel="stylesheet"]')]) {
     globalStyles.content.appendChild(node.cloneNode(true))
   }
 }
@@ -46,7 +45,8 @@ const observer = new MutationObserver(() => {
 observer.observe(document.head, {
   childList: true,
   subtree: true,
-  attributes: true
+  attributes: true,
+  characterData: true
 })
 
 updateGlobalStyles()
@@ -70,7 +70,7 @@ export const OpenStylable = superclass => {
         super.disconnectedCallback()
       }
         } finally {
-        openStylableElements.remove(this)
+        openStylableElements.delete(this)
         clearStyles(this)
       }
     }

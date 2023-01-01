@@ -14,17 +14,17 @@ function getAnchors(element) {
 }
 
 function clearStyles(element) {
-  let anchors = getAnchors(element)
+  let [startAnchor, endAnchor] = getAnchors(element)
   let nextSibling
-  while ((nextSibling = anchors[0].nextSibling) !== anchors[1]) {
+  while ((nextSibling = startAnchor.nextSibling) !== endAnchor) {
     nextSibling.remove()
   }
 }
 
 function setStyles(element) {
-  let anchors = getAnchors(element)
+  let [, endAnchor] = getAnchors(element)
   for (const node of [...globalStyles.content.children]) {
-    element.shadowRoot.insertBefore(node, anchors[1])
+    element.shadowRoot.insertBefore(node, endAnchor)
   }
 }
 

@@ -63,3 +63,32 @@ it('can re-style an element', async () => {
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 0)')
 })
 
+it('works with link rel stylesheet', async () => {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = 'data:text/css,' + encodeURIComponent('div { color: green }')
+  document.head.appendChild(link)
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 128, 0)')
+})
+
+it('works if style is modified', async () => {
+  addStyleTag('div { color: blue }')
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
+  document.head.querySelector('style').textContent = 'div { color: red }'
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+})
+
+// TODO: implement this
+it.skip('works with insertRule', async () => {
+  addStyleTag('div { color: blue }')
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
+  const sheets = [...document.styleSheets]
+  sheets.at(-1).insertRule('div { color: red } ')
+  await Promise.resolve()
+  debugger
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+})

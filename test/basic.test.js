@@ -46,7 +46,7 @@ it('can style an element', async () => {
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
 })
 
-it.only('can re-style an element', async () => {
+it('can re-style an element', async () => {
   addStyleTag('div { color: red }')
 
   await Promise.resolve()
@@ -62,3 +62,4 @@ it.only('can re-style an element', async () => {
   await Promise.resolve()
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 0)')
 })
+

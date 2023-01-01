@@ -45,9 +45,7 @@ const observer = new MutationObserver(() => {
 })
 observer.observe(document.head, {
   childList: true,
-  subtree: true,
-  attributes: true,
-  characterData: true
+  subtree: true
 })
 
 updateGlobalStyles()

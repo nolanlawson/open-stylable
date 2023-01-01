@@ -1,0 +1,1 @@
+export declare const OpenStylable: (superclass: typeof HTMLElement) => typeof HTMLElement;

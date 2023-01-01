@@ -25,5 +25,8 @@
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@web/test-runner": "^0.15.0",
     "standard": "^17.0.0"
-  }
+  },
+  "files": [
+    "src"
+  ]
 }

@@ -1,0 +1,25 @@
+{
+  "name": "open-stylable",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "stylable",
+    "styleable",
+    "web component"
+  ],
+  "author": "Nolan Lawson <nolan@nolanlawson.com>",
+  "license": "Apache-2.0",
+  "volta": {
+    "node": "18.12.1",
+    "npm": "8.19.3"
+  },
+  "devDependencies": {
+    "standard": "^17.0.0"
+  }
+}

@@ -26,7 +26,14 @@ afterEach(() =>{
   for (const node of [...document.head.querySelectorAll('style,link[rel="stylesheet"]')]) {
     node.remove()
   }
+  document.adoptedStyleSheets = []
 })
+
+function createConstructableStyleSheet(content) {
+  const sheet = new CSSStyleSheet()
+  sheet.replaceSync(content)
+  return sheet
+}
 
 function addStyleTag(content) {
   const style = document.createElement('style')
@@ -90,5 +97,18 @@ it.skip('works with insertRule', async () => {
   sheets.at(-1).insertRule('div { color: red } ')
   await Promise.resolve()
   debugger
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+})
+
+// TODO: implement this
+it.skip('works with adopted style sheets', async () => {
+  document.adoptedStyleSheets = [createConstructableStyleSheet('div { color: red }')]
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+  document.adoptedStyleSheets.push(createConstructableStyleSheet('div { color: green }'))
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 128, 0)')
+  document.adoptedStyleSheets.splice(1, 1)
+  await Promise.resolve()
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
 })

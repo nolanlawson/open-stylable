@@ -16,6 +16,8 @@ So basically: styles leak in, but they don't leak out.
 </body>
 ```
 
+[Demo](https://nolanlawson.github.io/open-stylable)
+
 ## Usage
 
 Install:

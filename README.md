@@ -68,3 +68,5 @@ This only works with open shadow DOM, not closed shadow DOM.
 Additionally, it only works for `<style>` and `<link rel="stylesheet">` tags in the `<head>`. More exotic ways of inserting styles, such as [`insertRule`](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet/insertRule) and [`document.adoptedStyleSheets`](https://developer.mozilla.org/en-US/docs/Web/API/Document/adoptedStyleSheets), are not supported.
 
 Although it would be possible to support such things, it would increase the bundle size and require global patching, which is a big cost for a niche feature.
+
+This implementation also uses [`MutationObserver`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/MutationObserver), which may have performance considerations if you have a lot of components and frequently-changing global styles.

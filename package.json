@@ -35,5 +35,13 @@
   "files": [
     "src",
     "types"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nolanlawson/open-stylable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nolanlawson/open-stylable/issues"
+  },
+  "homepage": "https://github.com/nolanlawson/open-stylable#readme"
 }

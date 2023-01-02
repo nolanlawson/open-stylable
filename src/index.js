@@ -48,32 +48,30 @@ observer.observe(document.head, {
 
 updateGlobalStyles()
 
-export const OpenStylable = superclass => {
-  return class extends superclass {
-    connectedCallback () {
-      try {
-        if (super.connectedCallback) {
-          super.connectedCallback()
-        }
-      } finally {
-        openStylableElements.add(this)
-        if (this.shadowRoot) {
-          setStyles(this)
-        } else { // if shadowRoot doesn't exist yet, wait to see if it gets added in connectedCallback
-          Promise.resolve().then(() => setStyles(this))
-        }
+export const OpenStylable = superclass => (class extends superclass {
+  connectedCallback () {
+    try {
+      if (super.connectedCallback) {
+        super.connectedCallback()
       }
-    }
-
-    disconnectedCallback () {
-      try {
-        if (super.disconnectedCallback) {
-          super.disconnectedCallback()
-        }
-      } finally {
-        openStylableElements.delete(this)
-        clearStyles(this)
+    } finally {
+      openStylableElements.add(this)
+      if (this.shadowRoot) {
+        setStyles(this)
+      } else { // if shadowRoot doesn't exist yet, wait to see if it gets added in connectedCallback
+        Promise.resolve().then(() => setStyles(this))
       }
     }
   }
-}
+
+  disconnectedCallback () {
+    try {
+      if (super.disconnectedCallback) {
+        super.disconnectedCallback()
+      }
+    } finally {
+      openStylableElements.delete(this)
+      clearStyles(this)
+    }
+  }
+})

@@ -135,7 +135,7 @@ it('styles removed when disconnected', async () => {
 
 it('works with own styles', async () => {
   customElements.define('x-ownstyles', class extends OpenStylable(HTMLElement) {
-    constructor() {
+    constructor () {
       super()
       this.attachShadow({ mode: 'open' }).innerHTML = '<style>div { color: red }</style><div>hello</div>'
     }
@@ -155,16 +155,17 @@ it('calls connected / disconnected callbacks', async () => {
   let calledConnected
   let calledDisconnected
   class Super extends HTMLElement {
-    connectedCallback() {
+    connectedCallback () {
       calledConnected = true
     }
-    disconnectedCallback() {
+
+    disconnectedCallback () {
       calledDisconnected = true
     }
   }
 
   customElements.define('x-callbacks', class extends OpenStylable(Super) {
-    constructor() {
+    constructor () {
       super()
       this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
     }

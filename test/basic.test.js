@@ -133,6 +133,24 @@ it('styles removed when disconnected', async () => {
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
 })
 
+it('works with own styles', async () => {
+  customElements.define('x-ownstyles', class extends OpenStylable(HTMLElement) {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' }).innerHTML = '<style>div { color: red }</style><div>hello</div>'
+    }
+  })
+  const element = document.createElement('x-ownstyles')
+  document.body.appendChild(element)
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+  addStyleTag('div { color: blue; background-color: green }')
+  // global styles go before local styles
+  await Promise.resolve()
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(255, 0, 0)')
+  expect(getComputedStyle(element.shadowRoot.querySelector('div')).backgroundColor).to.equal('rgb(0, 128, 0)')
+})
+
 // TODO: implement this
 it.skip('works with insertRule', async () => {
   addStyleTag('div { color: blue }')

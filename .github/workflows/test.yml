@@ -9,5 +9,5 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - run: npm lint
-      - run: npm test:coverage
+      - run: npm run lint
+      - run: npm run test:coverage

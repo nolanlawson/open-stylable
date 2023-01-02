@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "test": "web-test-runner \"test/**/*.test.js\" --node-resolve",
-    "test:watch": "web-test-runner \"test/**/*.test.js\" --node-resolve --watch",
+    "test:watch": "npm t -- --watch",
+    "test:coverage": "npm t -- --coverage",
     "lint": "standard"
   },
   "keywords": [

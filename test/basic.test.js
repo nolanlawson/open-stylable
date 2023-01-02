@@ -151,6 +151,31 @@ it('works with own styles', async () => {
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).backgroundColor).to.equal('rgb(0, 128, 0)')
 })
 
+it('calls connected / disconnected callbacks', async () => {
+  let calledConnected
+  let calledDisconnected
+  class Super extends HTMLElement {
+    connectedCallback() {
+      calledConnected = true
+    }
+    disconnectedCallback() {
+      calledDisconnected = true
+    }
+  }
+
+  customElements.define('x-callbacks', class extends OpenStylable(Super) {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
+    }
+  })
+  const element = document.createElement('x-callbacks')
+  document.body.appendChild(element)
+  document.body.removeChild(element)
+  expect(calledConnected).to.equal(true)
+  expect(calledDisconnected).to.equal(true)
+})
+
 // TODO: implement this
 it.skip('works with insertRule', async () => {
   addStyleTag('div { color: blue }')

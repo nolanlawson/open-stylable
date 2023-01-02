@@ -10,4 +10,4 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm lint
-      - run: npm test
+      - run: npm test:coverage

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Polymer/tachometer/master/config.schema.json",
+  "sampleSize": 50,
+  "timeout": 5,
+  "autoSampleConditions": ["5%"],
+  "benchmarks": [
+    {
+      "browser": {
+        "name": "chrome",
+        "headless": true
+      },
+      "measurement": [
+        {
+          "mode": "performance",
+          "entryName": "total"
+        }
+      ],
+      "expand": [
+        {
+          "name": "baseline",
+          "url": "./benchmark.html?baseline"
+        },
+        {
+          "name": "comparison",
+          "url": "./benchmark.html"
+        }
+      ]
+    }
+  ]
+}

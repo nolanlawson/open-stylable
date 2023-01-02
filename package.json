@@ -10,7 +10,8 @@
     "test": "web-test-runner \"test/**/*.test.js\" --node-resolve",
     "test:watch": "npm t -- --watch",
     "test:coverage": "npm t -- --coverage",
-    "lint": "standard"
+    "lint": "standard",
+    "benchmark": "tachometer --config ./benchmark.tachometer.json"
   },
   "keywords": [
     "stylable",
@@ -26,7 +27,8 @@
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@web/test-runner": "^0.15.0",
-    "standard": "^17.0.0"
+    "standard": "^17.0.0",
+    "tachometer": "^0.7.0"
   },
   "files": [
     "src",

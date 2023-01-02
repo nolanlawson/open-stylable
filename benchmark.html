@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Benchmark</title>
+</head>
+<body>
+<script type="module">
+  import { OpenStylable } from './src/index.js'
+
+  const params = new URLSearchParams(location.search)
+  const numStyles = parseInt(params.get('numStyles'), 10) || 10
+  const numComponents = parseInt(params.get('numComponents'), 10) || 100
+  const baseline = params.has('baseline')
+
+  for (let i = 0; i < numStyles; i++) {
+    const style = document.createElement('style')
+    style.textContent = `div { color: #${i.toString(16).padStart(6, '0')} }`
+    document.head.appendChild(style)
+  }
+
+  customElements.define('x-baseline', class extends HTMLElement {
+    constructor () {
+      super()
+      this.attachShadow({ mode: 'open' }).innerHTML = '<div>Hello world</div>'
+    }
+  })
+  customElements.define('x-comparison', class extends OpenStylable(HTMLElement) {
+    constructor () {
+      super()
+      this.attachShadow({ mode: 'open' }).innerHTML = '<div>Hello world</div>'
+    }
+  })
+
+  const tagName = baseline ? 'x-baseline' : 'x-comparison'
+
+  async function test() {
+    performance.mark('start')
+    for (let i = 0; i < numComponents; i++) {
+      document.body.appendChild(document.createElement(tagName))
+    }
+    // requestPostAnimationFrame-like
+    await new Promise(resolve => requestAnimationFrame(() => resolve()))
+    await new Promise(resolve => setTimeout(() => resolve()))
+    performance.measure('total', 'start')
+  }
+  test()
+</script>
+
+</body>
+</html>

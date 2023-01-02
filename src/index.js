@@ -4,6 +4,8 @@ let globalStyles
 const openStylableElements = new Set()
 const elementsToAnchors = new WeakMap()
 const delayedConnectedCallbackElements = new WeakSet()
+const constructableStylesheets = new WeakMap()
+window.__constructableStylesheets = constructableStylesheets
 
 // Use empty text nodes to know the start and end anchors of where we should insert cloned styles
 function getAnchors (element) {
@@ -24,10 +26,22 @@ function clearStyles (element) {
   }
 }
 
+function getConstructableStylesheet(node) {
+  let sheet = constructableStylesheets.get(node)
+  if (!sheet) {
+    sheet = new CSSStyleSheet()
+    sheet.replaceSync(node.textContent)
+    constructableStylesheets.set(node, sheet)
+  }
+  return sheet
+}
+
 function setStyles (element) {
   const [, endAnchor] = getAnchors(element)
   for (const node of globalStyles) {
-    element.shadowRoot.insertBefore(node.cloneNode(true), endAnchor)
+    const sheet = getConstructableStylesheet(node)
+    element.shadowRoot.adoptedStyleSheets.push(sheet)
+    // element.shadowRoot.insertBefore(node.cloneNode(true), endAnchor)
   }
 }
 

@@ -3,6 +3,7 @@
 let globalStyles
 const openStylableElements = new Set()
 const elementsToAnchors = new WeakMap()
+const delayedConnectedCallbackElements = new WeakSet()
 
 // Use empty text nodes to know the start and end anchors of where we should insert cloned styles
 function getAnchors (element) {
@@ -59,6 +60,7 @@ export const OpenStylable = superclass => (class extends superclass {
       if (this.shadowRoot) {
         setStyles(this)
       } else { // if shadowRoot doesn't exist yet, wait to see if it gets added in connectedCallback
+        delayedConnectedCallbackElements.add(this) // keep track of which elements needed a delay
         Promise.resolve().then(() => setStyles(this))
       }
     }
@@ -71,7 +73,11 @@ export const OpenStylable = superclass => (class extends superclass {
       }
     } finally {
       openStylableElements.delete(this)
-      clearStyles(this)
+      if (delayedConnectedCallbackElements.has(this)) { // ensure our disconnected logic runs after our connected logic
+        Promise.resolve().then(() => clearStyles(this))
+      } else { // run immediately, no need to delay
+        clearStyles(this)
+      }
     }
   }
 })

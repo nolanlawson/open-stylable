@@ -1,4 +1,4 @@
-/* global it, before, beforeEach, afterEach, getComputedStyle, customElements, HTMLElement, CSSStyleSheet */
+/* global describe, it, before, beforeEach, afterEach, getComputedStyle, customElements, HTMLElement, CSSStyleSheet */
 import { expect } from '@esm-bundle/chai'
 import { OpenStylable } from '../src/index.js'
 
@@ -105,18 +105,33 @@ it('works if shadow root is attached in connected callback - framework style', a
   expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
 })
 
-it('works if shadow root is attached in connected callback - standalone style', async () => {
-  customElements.define('x-connected', class extends OpenStylable(HTMLElement) {
-    connectedCallback () {
-      super.connectedCallback()
-      this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
-    }
+describe('works if shadow root is attached in connected callback - standalone style', () => {
+  before(() => {
+    customElements.define('x-connected', class extends OpenStylable(HTMLElement) {
+      connectedCallback () {
+        super.connectedCallback()
+        this.attachShadow({ mode: 'open' }).innerHTML = '<div>hello</div>'
+      }
+    })
   })
-  const element = document.createElement('x-connected')
-  document.body.appendChild(element)
-  addStyleTag('div { color: blue }')
-  await Promise.resolve()
-  expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
+
+  it('basic test', async () => {
+    const element = document.createElement('x-connected')
+    document.body.appendChild(element)
+    addStyleTag('div { color: blue }')
+    await Promise.resolve()
+    expect(getComputedStyle(element.shadowRoot.querySelector('div')).color).to.equal('rgb(0, 0, 255)')
+  })
+
+  it('connect then immediately disconnect', async () => {
+    addStyleTag('div { color: red }')
+    const element = document.createElement('x-connected')
+    document.body.appendChild(element)
+    document.body.removeChild(element)
+
+    await Promise.resolve()
+    expect(element.shadowRoot.querySelectorAll('*').length).to.equal(1) // no <style>
+  })
 })
 
 it('styles removed when disconnected', async () => {

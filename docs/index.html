@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>open-stylable</title>
+  <style>
+    body {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+    button {
+        font-size: 1.2em;
+    }
+    button, my-component {
+        display: block;
+        margin: 20px;
+    }
+  </style>
+  <style>
+    div { color: red }
+  </style>
+</head>
+<body>
+<h1>open-stylable demo</h1>
+
+<p>
+  This is a demo of <a href="https://github.com/nolanlawson/open-stylable">open-stylable</a>, showing how styles
+  can bleed into a web component, but not out of it, even when using shadow DOM.
+</p>
+
+<button>Add style</button>
+
+<my-component></my-component>
+
+<script type="module">
+  import { OpenStylable } from 'https://cdn.jsdelivr.net/npm/open-stylable@%5E1'
+
+  class MyComponent extends OpenStylable(HTMLElement) {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' }).innerHTML = '<div>Hello from the shadow DOM</div>'
+    }
+  }
+  customElements.define('my-component', MyComponent)
+
+  document.querySelector('button').addEventListener('click', () => {
+    const style = document.createElement('style')
+    style.textContent = `div { color: #${Math.floor(Math.random() * 0x1000000).toString(16)} }`
+    document.head.appendChild(style)
+  })
+</script>
+</body>
+</html>

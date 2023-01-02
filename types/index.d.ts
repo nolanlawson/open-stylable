@@ -1,1 +1,1 @@
-export declare const OpenStylable: (superclass: typeof HTMLElement) => typeof HTMLElement;
+export declare const OpenStylable: <T extends typeof HTMLElement>(superclass: T) => T;

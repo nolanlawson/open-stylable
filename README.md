@@ -1,17 +1,19 @@
 # open-stylable
 
-Proof-of-concept implementation of an ["open-stylable"](https://github.com/WICG/webcomponents/issues/909) web component. Uses shadow DOM, but inherits all styles defined in the global `<head>`.
+Tiny (<0.5kB min+gz) proof-of-concept implementation of an ["open-stylable"](https://github.com/WICG/webcomponents/issues/909) web component. It can be styled from the global `<head>`, even though it uses shadow DOM.
 
 So basically: styles leak in, but they don't leak out.
 
 ```html
 <head>
-<style>div { color: red }</style>
+  <style>div { color: red }</style>
 </head>
-<my-component>
-  #shadow-root
-    <div>I'm red, even though I'm in the shadow DOM!</div>
-</my-component>
+<body>
+  <my-component>
+    #shadow-root
+      <div>I'm red!</div>
+  </my-component>
+</body>
 ```
 
 ## Usage
@@ -27,6 +29,7 @@ import { OpenStylable } from 'open-stylable'
 
 class MyComponent extends OpenStylable(HTMLElement) {
   constructor() {
+    super()
     this.attachShadow({ mode: 'open' }).innerHTML = '<div>Hello world</div>'
   }
 }
@@ -64,6 +67,8 @@ class MyComponent extends OpenStylable(LitElement) {
 ## Limitations
 
 This only works with open shadow DOM, not closed shadow DOM.
+
+Also, it doesn't work with selectors that cross shadow boundaries, such as `body.foo *`.
 
 Additionally, it only works for `<style>` and `<link rel="stylesheet">` tags in the `<head>`. More exotic ways of inserting styles, such as [`insertRule`](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet/insertRule) and [`document.adoptedStyleSheets`](https://developer.mozilla.org/en-US/docs/Web/API/Document/adoptedStyleSheets), are not supported.
 
